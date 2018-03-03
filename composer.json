@@ -1,0 +1,45 @@
+{
+  "name": "angelxmoreno/get-set-annotations",
+  "description": "Helper for the GetSetTrait",
+  "license": "MIT",
+  "support": {
+    "issues": "https://github.com/angelxmoreno/get-set-methods-annotation/issues",
+    "source": "https://github.com/angelxmoreno/get-set-methods-annotation/"
+  },
+  "authors": [
+    {
+      "name": "Angel S. Moreno",
+      "email": "angelxmoreno@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^5.6",
+    "cakephp/collection": "^3.5",
+    "cakephp/utility": "^3.5",
+    "rakshazi/get-set-trait": "^1.0",
+    "symfony/class-loader": "^3.4"
+  },
+  "require-dev": {
+    "kahlan/kahlan": "^4.0",
+    "squizlabs/php_codesniffer": "^3.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Axm\\GetSetAnnotations\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Axm\\GetSetAnnotations\\Test\\": "tests"
+    }
+  },
+  "prefer-stable": true,
+  "config": {
+    "sort-packages": true,
+    "bin-dir": "bin"
+  },
+  "scripts": {
+    "cs-check": "phpcs --colors -p --standard=PSR2 ./src ./tests",
+    "cs-fix": "phpcbf --colors --standard=PSR2 ./src ./tests"
+  }
+}
