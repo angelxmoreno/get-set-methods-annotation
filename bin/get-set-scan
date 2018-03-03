@@ -1,7 +1,15 @@
 #!/usr/bin/env php
 <?php
-define('DS', DIRECTORY_SEPARATOR);
-define('VENDOR_DIR', dirname(__DIR__) . DS . 'vendor' . DS);
+error_reporting(E_ALL);
+
+if (!defined('DS')) {
+    define('DS', DIRECTORY_SEPARATOR);
+}
+
+$pwd = realpath(getcwd());
+
+define('VENDOR_DIR', $pwd . DS . 'vendor' . DS);
+
 
 include VENDOR_DIR . 'autoload.php';
 
