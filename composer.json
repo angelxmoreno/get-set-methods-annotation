@@ -38,6 +38,7 @@
     "sort-packages": true,
     "bin-dir": "bin"
   },
+  "bin": ["bin/get-set-scan"],
   "scripts": {
     "cs-check": "phpcs --colors -p --standard=PSR2 ./src ./tests",
     "cs-fix": "phpcbf --colors --standard=PSR2 ./src ./tests"
