@@ -1,0 +1,45 @@
+language: php
+
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+  - 7.1
+  - 7.2
+
+before_install:
+  - echo "Running BeforeInstall"
+
+before_script:
+  - echo "Running BeforeScript"
+  - composer self-update
+  - composer install --no-interaction
+  - ./bin/download-codeclimate-reporter.sh
+
+script:
+  - echo "RunningScript"
+  - composer tests:clover
+
+after_success:
+  - echo "Running AfterSuccess"
+
+after_script:
+  - echo "Running AfterScript"
+  - ./bin/codacycoverage clover clover.xml -vvv
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+
+# allow_failures: Allow this build to fail under the specified environments.
+# fast_finish: If your build fails do not continue trying to build, just stop.
+matrix:
+  fast_finish: true
+
+# Customize when the notification emails are sent.
+notifications:
+    on_success: never
+    on_failure: never
+
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
