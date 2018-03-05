@@ -13,7 +13,7 @@
     }
   ],
   "require": {
-    "php": ">=5.6.0",
+    "php": "~5.6 | ^7.0| ^7.1| ^7.2",
     "cakephp/collection": "^3.5",
     "cakephp/utility": "^3.5",
     "rakshazi/get-set-trait": "^1.0",
@@ -39,7 +39,9 @@
     "sort-packages": true,
     "bin-dir": "bin"
   },
-  "bin": ["bin/get-set-scan"],
+  "bin": [
+    "bin/get-set-scan"
+  ],
   "scripts": {
     "cs:check": "phpcs --colors -p --standard=PSR2 ./src ./tests",
     "cs:fix": "phpcbf --colors --standard=PSR2 ./src ./tests",
