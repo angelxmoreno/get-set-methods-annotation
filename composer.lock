@@ -4,11 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "631fdf383c7a7c0a504aa93c2d319b0b",
+    "content-hash": "e663b074766a99a45e2e0be34a5a6a66",
     "packages": [
         {
             "name": "cakephp/collection",
-            "version": "3.5.12",
+            "version": "3.5.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/collection.git",
@@ -54,7 +54,7 @@
         },
         {
             "name": "cakephp/utility",
-            "version": "3.5.12",
+            "version": "3.5.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/utility.git",
@@ -698,7 +698,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^5.6"
+        "php": "~5.6 | ^7.0| ^7.1| ^7.2"
     },
     "platform-dev": []
 }
