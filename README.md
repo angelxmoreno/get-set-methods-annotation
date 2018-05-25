@@ -21,7 +21,7 @@ support the [GetSetTrait](https://github.com/mikebarlow/GetSet), it can be used 
 
 ## Installation
 ```bash
-composer require --dev composer require angelxmoreno/get-set-annotations
+composer require --dev angelxmoreno/get-set-annotations
 ```
 
 ## Usage
