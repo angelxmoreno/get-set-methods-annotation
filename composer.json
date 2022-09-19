@@ -36,8 +36,7 @@
   },
   "prefer-stable": true,
   "config": {
-    "sort-packages": true,
-    "bin-dir": "bin"
+    "sort-packages": true
   },
   "bin": [
     "bin/get-set-scan"
