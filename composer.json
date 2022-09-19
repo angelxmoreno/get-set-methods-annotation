@@ -14,7 +14,6 @@
   ],
   "require": {
     "php": ">=5.6",
-    "cakephp/utility": "^3.5",
     "hanneskod/classtools": "^1.2",
     "symfony/finder": "^5.4"
   },
