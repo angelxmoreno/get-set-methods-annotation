@@ -3,35 +3,17 @@
 namespace Axm\GetSetAnnotations;
 
 use Cake\Utility\Inflector;
-use Rakshazi\GetSetTrait;
+use ReflectionProperty;
 
 /**
  * Class PropertyInfo
  *
  * @package Axm\GetSetAnnotations
  *
- * @method \ReflectionProperty getReflector()
- * @method void setReflector(\ReflectionProperty $reflector)
- * @method string getName()
- * @method void setName(string $name)
- * @method string getComment()
- * @method void setComment(string $comment)
- * @method string getType()
- * @method void setType(string $type)
- * @method bool getNeedsSetter()
- * @method void setNeedsSetter(bool $needs_setter)
- * @method bool getNeedsGetter()
- * @method void setNeedsGetter(bool $needs_getter)
  */
 class PropertyInfo
 {
-    use GetSetTrait;
-
     const PATTERN_PROPERTY_TYPE = '~@var\s+([^\s]+)~i';
-    /**
-     * @var \ReflectionProperty
-     */
-    protected $reflector;
 
     /**
      * @var string
@@ -39,50 +21,96 @@ class PropertyInfo
     protected $name;
 
     /**
-     * @var string
-     */
-    protected $comment;
-
-    /**
-     * @var string
+     * @var string|null
      */
     protected $type;
 
     /**
-     * @var bool
+     * @var string
      */
-    protected $needs_setter = false;
+    protected $getter_func_name;
+
+    /**
+     * @var string
+     */
+    protected $setter_func_name;
 
     /**
      * @var bool
      */
-    protected $needs_getter = false;
+    protected $missing_setter_method = true;
+
+    /**
+     * @var bool
+     */
+    protected $missing_getter_method = true;
 
     /**
      * PropertyInfo constructor.
      *
-     * @param \ReflectionProperty $r_property
+     * @param ReflectionProperty $reflectionProperty
+     * @param array $knowMethods
      */
-    public function __construct(\ReflectionProperty $r_property)
+    public function __construct(ReflectionProperty $reflectionProperty, $knowMethods = [])
     {
-        $this->reflector = $r_property;
-        $this->name      = $r_property->getName();
-        $this->comment   = $r_property->getDocComment();
+        $this->name = $reflectionProperty->getName();
+        $getSetSuffix = Inflector::camelize($this->name);
+        $this->getter_func_name = 'get' . $getSetSuffix;
+        $this->setter_func_name = 'set' . $getSetSuffix;
+        $this->missing_getter_method = !in_array($this->getter_func_name, $knowMethods);
+        $this->missing_setter_method = !in_array($this->setter_func_name, $knowMethods);
 
-        preg_match(self::PATTERN_PROPERTY_TYPE, $r_property->getDocComment(), $matches);
-
+        preg_match(self::PATTERN_PROPERTY_TYPE, $reflectionProperty->getDocComment(), $matches);
         $this->type = count($matches) == 2
             ? $matches[1]
-            : null;
+            : 'null';
     }
 
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return string
+     */
     public function getGetterFuncName()
     {
-        return 'get' . Inflector::camelize($this->name);
+        return $this->getter_func_name;
     }
 
+    /**
+     * @return string
+     */
     public function getSetterFuncName()
     {
-        return 'set' . Inflector::camelize($this->name);
+        return $this->setter_func_name;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMissingSetterMethod()
+    {
+        return $this->missing_setter_method;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMissingGetterMethod()
+    {
+        return $this->missing_getter_method;
     }
 }

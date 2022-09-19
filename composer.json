@@ -13,11 +13,10 @@
     }
   ],
   "require": {
-    "php": "~5.6 | ^7.0| ^7.1| ^7.2",
-    "cakephp/collection": "^3.5",
+    "php": ">=5.6",
     "cakephp/utility": "^3.5",
-    "rakshazi/get-set-trait": "^1.0",
-    "symfony/class-loader": "^3.4"
+    "hanneskod/classtools": "^1.2",
+    "symfony/finder": "^5.4"
   },
   "require-dev": {
     "codacy/coverage": "^1.4",
