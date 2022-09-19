@@ -2,29 +2,21 @@
 
 namespace Axm\GetSetAnnotations;
 
-use Rakshazi\GetSetTrait;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionMethod;
+use ReflectionProperty;
 
 /**
  * Class ClassInfo
  *
  * @package Axm\GetSetAnnotations
  *
- * @method string getPath()
- * @method void setPath(string $path)
- * @method string getFqn()
- * @method void setFqn(string $fqn)
- * @method \ReflectionClass getReflector()
- * @method void setReflector(\ReflectionClass $reflector)
- * @method PropertyInfo[] getProperties()
- * @method void setProperties(PropertyInfo [] $properties)
- * @method string getDocBlock()
- * @method void setDocBlock(string $doc_block)
  */
 class ClassInfo
 {
-    use GetSetTrait;
-
     const PATTERN_METHOD_IN_DOCBLOCK = '~.+@method [^ ]+ ([^\(]+)~i';
+
     /**
      * @var string
      */
@@ -36,117 +28,140 @@ class ClassInfo
     protected $fqn;
 
     /**
-     * @var \ReflectionClass
-     */
-    protected $reflector;
-
-    /**
      * @var PropertyInfo[]
      */
-    protected $properties;
+    protected $properties = [];
 
     /**
-     * @var string
+     * @var bool
      */
-    protected $doc_block;
+    protected $has_missing_methods = true;
 
     /**
      * ClassInfo constructor.
      *
      * @param string $fqn
+     * @param string $path
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public function __construct($fqn)
+    public function __construct($fqn, $path)
     {
-        $reflector = new \ReflectionClass($fqn);
+        $this->fqn = $fqn;
+        $this->path = $path;
+        $reflectionClass = new ReflectionClass($fqn);
+        $this->properties = $this->buildPropertyInfoArray($reflectionClass);
+        $this->has_missing_methods = count($this->properties) > 0;
+    }
 
-        $this->setFqn($fqn);
-        $this->setReflector($reflector);
-        $this->setPath($reflector->getFileName());
-        $this->assignPropertyInfo($reflector);
-        $this->setDocBlock($this->getMissingMethodDoc());
-        $this->getDocMethods();
+    /**
+     * @param ReflectionClass $reflectionClass
+     * @return PropertyInfo[]
+     */
+    protected function buildPropertyInfoArray(ReflectionClass $reflectionClass)
+    {
+        $publicMethods = [];
+        $reflectionMethods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
+        foreach ($reflectionMethods as $reflectionMethod) {
+            /**
+             * @TODO why only the locally defined methods? In a case where the parent defines a getter or setter, do we
+             * still need to add the doc block methods?
+             */
+            $definedLocally = $reflectionMethod->getDeclaringClass()->getName() === $reflectionClass->getName();
+            if ($definedLocally) {
+                $publicMethods[] = $reflectionMethod->getName();
+            }
+        }
+
+        $propertiesInfo = [];
+        $reflectionProperties = $reflectionClass->getProperties(ReflectionProperty::IS_PROTECTED);
+
+        $knownMethods = array_merge($publicMethods, $this->buildCurrentDocMethods($reflectionClass));
+        foreach ($reflectionProperties as $reflectionProperty) {
+            $definedLocally = $reflectionProperty->getDeclaringClass()->getName() === $reflectionClass->getName();
+            if ($definedLocally) {
+                $propertyInfo = new PropertyInfo($reflectionProperty, $knownMethods);
+                if ($propertyInfo->isMissingGetterMethod() || $propertyInfo->isMissingSetterMethod()) {
+                    $propertiesInfo[] = $propertyInfo;
+                }
+            }
+        }
+
+        return $propertiesInfo;
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function buildCurrentDocMethods(ReflectionClass $reflectionClass)
+    {
+        preg_match_all(self::PATTERN_METHOD_IN_DOCBLOCK, $reflectionClass->getDocComment(), $matches);
+        return $matches[1];
     }
 
     /**
      * @return string
      */
-    protected function getMissingMethodDoc()
+    public function buildMissingMethodsDoc($build_getters = true, $build_setters = true)
     {
+        if (!$this->has_missing_methods) {
+            return '';
+        }
+
         $doc = '';
+        foreach ($this->properties as $propertyInfo) {
+            if ($propertyInfo->isMissingSetterMethod() && $build_setters) {
+                $doc .= "\n";
+                $doc .= sprintf(
+                    '* @method void %s(%s $%s)',
+                    $propertyInfo->getSetterFuncName(),
+                    $propertyInfo->getType(),
+                    $propertyInfo->getName()
+                );
+            }
 
-        collection($this->getProperties())
-            ->each(function (PropertyInfo $property_info) use (&$doc) {
-
-                if ($property_info->getNeedsGetter()) {
-                    $doc .= "\n";
-                    $doc .= sprintf(
-                        '* @method %s %s()',
-                        $property_info->getType(),
-                        $property_info->getGetterFuncName()
-                    );
-                }
-                
-                if ($property_info->getNeedsSetter()) {
-                    $doc .= "\n";
-                    $doc .= sprintf(
-                        '* @method void %s(%s $%s)',
-                        $property_info->getSetterFuncName(),
-                        $property_info->getType(),
-                        $property_info->getName()
-                    );
-                }
-            });
+            if ($propertyInfo->isMissingGetterMethod() && $build_getters) {
+                $doc .= "\n";
+                $doc .= sprintf(
+                    '* @method %s %s()',
+                    $propertyInfo->getType(),
+                    $propertyInfo->getGetterFuncName()
+                );
+            }
+        }
 
         return $doc;
     }
 
     /**
-     * @param \ReflectionClass $reflection_class
+     * @return bool
      */
-    protected function assignPropertyInfo(\ReflectionClass $reflection_class)
+    public function hasMissingMethods()
     {
-        $methods = collection($reflection_class->getMethods(\ReflectionMethod::IS_PUBLIC))
-            ->filter(function (\ReflectionMethod $r_method) {
-                return $r_method->getDeclaringClass()->getName() === $this->getFqn();
-            })->map(function (\ReflectionMethod $r_method) {
-                return $r_method->getName();
-            })->toArray();
-
-        $protected_props = collection($reflection_class->getProperties(\ReflectionProperty::IS_PROTECTED))
-            ->filter(function (\ReflectionProperty $r_property) {
-
-                return $r_property->getDeclaringClass()->getName() === $this->getFqn();
-            })->map(function (\ReflectionProperty $r_property) use ($methods) {
-                $property_info = new PropertyInfo($r_property);
-
-                $property_info->setNeedsGetter(
-                    !in_array($property_info->getGetterFuncName(), $methods)
-                    && !in_array($property_info->getGetterFuncName(), $this->getDocMethods())
-                );
-                $property_info->setNeedsSetter(
-                    !in_array($property_info->getSetterFuncName(), $methods)
-                    && !in_array($property_info->getSetterFuncName(), $this->getDocMethods())
-                );
-
-                return $property_info;
-            })->filter(function (PropertyInfo $property_info) {
-
-                return $property_info->getNeedsGetter() || $property_info->getNeedsSetter();
-            })->toArray();
-
-
-        $this->setProperties($protected_props);
+        return $this->has_missing_methods;
     }
 
     /**
-     * @return array
+     * @return string
      */
-    protected function getDocMethods()
+    public function getPath()
     {
-        preg_match_all(self::PATTERN_METHOD_IN_DOCBLOCK, $this->getReflector()->getDocComment(), $matches);
+        return $this->path;
+    }
 
-        return $matches[1];
+    /**
+     * @return string
+     */
+    public function getFqn()
+    {
+        return $this->fqn;
+    }
+
+    /**
+     * @return PropertyInfo[]
+     */
+    public function getProperties()
+    {
+        return $this->properties;
     }
 }

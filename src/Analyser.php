@@ -2,7 +2,9 @@
 
 namespace Axm\GetSetAnnotations;
 
-use Symfony\Component\ClassLoader\ClassMapGenerator;
+use hanneskod\classtools\Iterator\ClassIterator;
+use ReflectionException;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Class Analyser
@@ -14,26 +16,29 @@ class Analyser
     /**
      * @param $path
      *
-     * @return array
-     * @throws \ReflectionException
+     * @return ClassInfo[]
+     * @throws ReflectionException
      */
     public static function path($path)
     {
-        $class_map   = ClassMapGenerator::createMap($path);
-        $class_infos = [];
-        foreach ($class_map as $fqn => $path) {
-            $class_info = new ClassInfo($fqn);
+        return self::buildClassInfosInPath($path);
+    }
 
-            $class_infos[] = [
-                'path'  => $class_info->getPath(),
-                'class' => $class_info->getFqn(),
-                'doc'   => $class_info->getDocBlock(),
-            ];
+    /**
+     * @throws ReflectionException
+     */
+    protected static function buildClassInfosInPath($path)
+    {
+        $finder = new Finder;
+        $iter = new ClassIterator($finder->in($path));
+
+        $classInfos = [];
+        foreach ($iter->getClassMap() as $classname => $splFileInfo) {
+            $classInfo = new ClassInfo($classname, $splFileInfo->getRealPath());
+            if ($classInfo->hasMissingMethods()) {
+                $classInfos[] = $classInfo;
+            }
         }
-
-        return collection($class_infos)
-            ->filter(function (array $row) {
-                return $row['doc'] !== '';
-            })->toArray();
+        return $classInfos;
     }
 }

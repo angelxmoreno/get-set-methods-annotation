@@ -2,3 +2,7 @@
 cc-test-reporter
 .env
 clover.xml
+./bin/*
+!/bin/download-codeclimate-reporter.sh
+!/bin/get-set-scan
+!/bin/run-tests

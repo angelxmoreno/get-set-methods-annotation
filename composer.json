@@ -13,11 +13,10 @@
     }
   ],
   "require": {
-    "php": "~5.6 | ^7.0| ^7.1| ^7.2",
-    "cakephp/collection": "^3.5",
+    "php": ">=5.6",
     "cakephp/utility": "^3.5",
-    "rakshazi/get-set-trait": "^1.0",
-    "symfony/class-loader": "^3.4"
+    "hanneskod/classtools": "^1.2",
+    "symfony/finder": "^5.4"
   },
   "require-dev": {
     "codacy/coverage": "^1.4",
@@ -36,8 +35,7 @@
   },
   "prefer-stable": true,
   "config": {
-    "sort-packages": true,
-    "bin-dir": "bin"
+    "sort-packages": true
   },
   "bin": [
     "bin/get-set-scan"
@@ -45,6 +43,7 @@
   "scripts": {
     "cs:check": "phpcs --colors -p --standard=PSR2 ./src ./tests",
     "cs:fix": "phpcbf --colors --standard=PSR2 ./src ./tests",
+    "tests": "kahlan --cc=true --reporter=verbose",
     "tests:check": "kahlan --cc=true --reporter=verbose",
     "tests:coverage": "kahlan --cc=true --reporter=verbose --coverage=4",
     "tests:report": "kahlan --cc=true --reporter=bar --coverage=4 --clover=clover.xml",

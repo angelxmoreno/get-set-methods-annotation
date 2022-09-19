@@ -1,24 +1,44 @@
 #!/usr/bin/env php
 <?php
+
+const GETTER_FLAG = '--getters';
+const SETTER_FLAG = '--setters';
+
+use Axm\GetSetAnnotations\Analyser;
+use Axm\GetSetAnnotations\Writer;
+
 error_reporting(E_ALL);
 
 if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
 }
 
-$pwd = realpath(getcwd());
+if (!defined('ROOT_DIR')) {
+    define('ROOT_DIR', dirname(__DIR__) . DS);
+}
 
-define('VENDOR_DIR', $pwd . DS . 'vendor' . DS);
-
+if (!defined('VENDOR_DIR')) {
+    define('VENDOR_DIR', ROOT_DIR . 'vendor' . DS);
+}
 
 include VENDOR_DIR . 'autoload.php';
+$args = $argv;
+array_shift($args);
+$path = $args[0];
 
-$paths = $argv;
-array_shift($paths);
+$getters = in_array(GETTER_FLAG, $args) || !in_array(SETTER_FLAG, $args);
+$setters = in_array(SETTER_FLAG, $args) || !in_array(GETTER_FLAG, $args);
 
+try {
+    $classInfos = Analyser::path($path);
+    $writer = new Writer($classInfos, false, $getters, $setters);
+    $writer->toCli();
+} catch (Exception $e) {
+    echo 'Unable to scan due to: ' . $e->getMessage() . PHP_EOL;
+    echo 'File: ' . $e->getFile() . PHP_EOL;
+    echo 'Line: ' . $e->getLine() . PHP_EOL;
+    echo 'Trace: ' . $e->getTraceAsString() . PHP_EOL;
+}
 
-$info = \Axm\GetSetAnnotations\Analyser::path($paths[0]);
-
-print_r($info);
 
 echo PHP_EOL;
