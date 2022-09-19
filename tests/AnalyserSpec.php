@@ -1,13 +1,18 @@
 <?php
 
 use Axm\GetSetAnnotations\Analyser;
-use Symfony\Component\ClassLoader\ClassMapGenerator;
+use Axm\GetSetAnnotations\ClassInfo;
 
 describe(Analyser::class, function () {
-    it('creates a class/file mapper', function(){
-        expect(ClassMapGenerator::class)
-            ->toReceive('::createMap');
+    describe('::path', function () {
+        it('returns an array of ClassInfos', function () {
+            $classInfos = Analyser::path(SAMPLE_CLASS_PATH);
+            expect($classInfos)->toBeAn('array');
+            expect($classInfos)->toHaveLength(2);
 
-        Analyser::path(__DIR__);
+            foreach ($classInfos as $classInfo) {
+                expect($classInfo)->toBeAnInstanceOf(ClassInfo::class);
+            }
+        });
     });
 });

@@ -43,6 +43,7 @@
   "scripts": {
     "cs:check": "phpcs --colors -p --standard=PSR2 ./src ./tests",
     "cs:fix": "phpcbf --colors --standard=PSR2 ./src ./tests",
+    "tests": "kahlan --cc=true --reporter=verbose",
     "tests:check": "kahlan --cc=true --reporter=verbose",
     "tests:coverage": "kahlan --cc=true --reporter=verbose --coverage=4",
     "tests:report": "kahlan --cc=true --reporter=bar --coverage=4 --clover=clover.xml",
