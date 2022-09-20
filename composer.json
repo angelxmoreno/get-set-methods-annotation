@@ -13,7 +13,7 @@
     }
   ],
   "require": {
-    "php": ">=5.6",
+    "php": ">=7.1",
     "hanneskod/classtools": "^1.2",
     "symfony/finder": "^5.4"
   },
