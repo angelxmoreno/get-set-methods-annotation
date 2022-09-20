@@ -2,7 +2,6 @@
 
 namespace Axm\GetSetAnnotations;
 
-use Cake\Utility\Inflector;
 use ReflectionProperty;
 
 /**
@@ -54,9 +53,7 @@ class PropertyInfo
     public function __construct(ReflectionProperty $reflectionProperty, $knowMethods = [])
     {
         $this->name = $reflectionProperty->getName();
-        $getSetSuffix = Inflector::camelize($this->name);
-        $this->getter_func_name = 'get' . $getSetSuffix;
-        $this->setter_func_name = 'set' . $getSetSuffix;
+        $this->setFunctionNames();
         $this->missing_getter_method = !in_array($this->getter_func_name, $knowMethods);
         $this->missing_setter_method = !in_array($this->setter_func_name, $knowMethods);
 
@@ -66,6 +63,12 @@ class PropertyInfo
             : 'null';
     }
 
+    protected function setFunctionNames()
+    {
+        $getSetSuffix = CamelCase::convert($this->name);
+        $this->getter_func_name = 'get' . $getSetSuffix;
+        $this->setter_func_name = 'set' . $getSetSuffix;
+    }
     /**
      * @return string
      */

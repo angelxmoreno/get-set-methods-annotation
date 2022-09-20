@@ -32,33 +32,75 @@ composer require --dev angelxmoreno/get-set-annotations
 This prints out a report similar to the following:
 
 ```text
-Array
-(
-    [2] => Array
-        (
-            [path] => /Users/amoreno/Projects/GetSetAnnotations/src/PropertyInfo.php
-            [class] => Axm\GetSetAnnotations\PropertyInfo
-            [doc] => 
-* @method \ReflectionProperty getReflector()
-* @method void setReflector(\ReflectionProperty $reflector)
-* @method string getName()
-* @method void setName(string $name)
-* @method string getComment()
-* @method void setComment(string $comment)
-* @method string getType()
-* @method void setType(string $type)
-* @method bool getNeedsSetter()
-* @method void setNeedsSetter(bool $needs_setter)
-* @method bool getNeedsGetter()
-* @method void setNeedsGetter(bool $needs_getter)
-        )
-
-)
-
+Classname : Axm\GetSetAnnotations\ClassInfo
+Path : /Users/amoreno/Projects/AmzRouter/get-set-methods-annotation/src/ClassInfo.php
+DocBlock : 
+* @method void setPath(string $path)
+* @method void setFqn(string $fqn)
+* @method void setProperties(PropertyInfo[] $properties)
+* @method void setHasMissingMethods(bool $has_missing_methods)
+* @method bool getHasMissingMethods()
 ```
 
+## Testing
+tests can be run in two different ways; locally and using a docker container.
+
+### Locally
+```shell
+composer tests:check
+composer tests:coverage
+```
+
+### Using the built-in docker image
+```shell
+composer docker:tests:check
+composer docker:tests:coverage
+```
+
+## Current test coverage
+```text
+Coverage Summary
+----------------
+                                                        Lines            %
+
+ \                                                     45 / 71      63.38%
+└── Axm\                                               45 / 71      63.38%
+   └── GetSetAnnotations\                              45 / 71      63.38%
+      ├── Analyser                                      7 /  7     100.00%
+      │  ├── Analyser::buildClassInfosInPath()          6 /  6     100.00%
+      │  └── Analyser::path()                           1 /  1     100.00%
+      ├── CamelCase                                     2 /  3      66.67%
+      │  └── CamelCase::convert()                       2 /  3      66.67%
+      ├── ClassInfo                                    22 / 29      75.86%
+      │  ├── ClassInfo::__construct()                   5 /  5     100.00%
+      │  ├── ClassInfo::buildCurrentDocMethods()        2 /  2     100.00%
+      │  ├── ClassInfo::buildMissingMethodsDoc()        0 /  7       0.00%
+      │  ├── ClassInfo::buildPropertyInfoArray()       11 / 11     100.00%
+      │  ├── ClassInfo::getFqn()                        1 /  1     100.00%
+      │  ├── ClassInfo::getPath()                       1 /  1     100.00%
+      │  ├── ClassInfo::getProperties()                 1 /  1     100.00%
+      │  └── ClassInfo::hasMissingMethods()             1 /  1     100.00%
+      ├── PropertyInfo                                 14 / 14     100.00%
+      │  ├── PropertyInfo::__construct()                8 /  8     100.00%
+      │  ├── PropertyInfo::getGetterFuncName()          1 /  1     100.00%
+      │  ├── PropertyInfo::getName()                    1 /  1     100.00%
+      │  ├── PropertyInfo::getSetterFuncName()          1 /  1     100.00%
+      │  ├── PropertyInfo::getType()                    1 /  1     100.00%
+      │  ├── PropertyInfo::isMissingGetterMethod()      1 /  1     100.00%
+      │  └── PropertyInfo::isMissingSetterMethod()      1 /  1     100.00%
+      └── Writer                                        0 / 18       0.00%
+         ├── Writer::__construct()                      0 /  4       0.00%
+         ├── Writer::outCli()                           0 /  3       0.00%
+         ├── Writer::toCli()                            0 /  6       0.00%
+         └── Writer::writeToFile()                      0 /  5       0.00%
+
+Total: 63.38% (45/71)
+
+Coverage collected in 0.069 seconds
+
+```
 # License
 
-Copyright 2018 Angel S. Moreno (angelxmoreno). All rights reserved.
+Copyright 2022 Angel S. Moreno (angelxmoreno). All rights reserved.
 
 Licensed under the [MIT](http://www.opensource.org/licenses/mit-license.php) License. Redistributions of the source code included in this repository must retain the copyright notice found in each file.

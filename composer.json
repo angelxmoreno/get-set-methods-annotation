@@ -14,12 +14,10 @@
   ],
   "require": {
     "php": ">=5.6",
-    "cakephp/utility": "^3.5",
     "hanneskod/classtools": "^1.2",
     "symfony/finder": "^5.4"
   },
   "require-dev": {
-    "codacy/coverage": "^1.4",
     "kahlan/kahlan": "^4.0",
     "squizlabs/php_codesniffer": "^3.2"
   },
@@ -41,12 +39,18 @@
     "bin/get-set-scan"
   ],
   "scripts": {
+    "workflow": "act -P ubuntu-20.04=shivammathur/node:2004",
     "cs:check": "phpcs --colors -p --standard=PSR2 ./src ./tests",
     "cs:fix": "phpcbf --colors --standard=PSR2 ./src ./tests",
     "tests": "kahlan --cc=true --reporter=verbose",
     "tests:check": "kahlan --cc=true --reporter=verbose",
     "tests:coverage": "kahlan --cc=true --reporter=verbose --coverage=4",
     "tests:report": "kahlan --cc=true --reporter=bar --coverage=4 --clover=clover.xml",
-    "tests:clover": "kahlan --no-header --cc=true --reporter=bar --clover=clover.xml"
+    "tests:clover": "kahlan --no-header --cc=true --reporter=bar --clover=clover.xml",
+
+    "docker:tests:check": "./bin/run-tests --cc=true --reporter=verbose",
+    "docker:tests:coverage": "./bin/run-tests --cc=true --reporter=verbose --coverage=4",
+    "docker:tests:report": "./bin/run-tests --cc=true --reporter=bar --coverage=4 --clover=clover.xml",
+    "docker:tests:clover": "./bin/run-tests --no-header --cc=true --reporter=bar --clover=clover.xml"
   }
 }
