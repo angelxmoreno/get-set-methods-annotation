@@ -39,6 +39,7 @@
     "bin/get-set-scan"
   ],
   "scripts": {
+    "workflow": "act -P ubuntu-20.04=shivammathur/node:2004",
     "cs:check": "phpcs --colors -p --standard=PSR2 ./src ./tests",
     "cs:fix": "phpcbf --colors --standard=PSR2 ./src ./tests",
     "tests": "kahlan --cc=true --reporter=verbose",
