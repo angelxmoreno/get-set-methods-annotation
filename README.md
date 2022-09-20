@@ -32,33 +32,18 @@ composer require --dev angelxmoreno/get-set-annotations
 This prints out a report similar to the following:
 
 ```text
-Array
-(
-    [2] => Array
-        (
-            [path] => /Users/amoreno/Projects/GetSetAnnotations/src/PropertyInfo.php
-            [class] => Axm\GetSetAnnotations\PropertyInfo
-            [doc] => 
-* @method \ReflectionProperty getReflector()
-* @method void setReflector(\ReflectionProperty $reflector)
-* @method string getName()
-* @method void setName(string $name)
-* @method string getComment()
-* @method void setComment(string $comment)
-* @method string getType()
-* @method void setType(string $type)
-* @method bool getNeedsSetter()
-* @method void setNeedsSetter(bool $needs_setter)
-* @method bool getNeedsGetter()
-* @method void setNeedsGetter(bool $needs_getter)
-        )
-
-)
-
+Classname : Axm\GetSetAnnotations\ClassInfo
+Path : /Users/amoreno/Projects/AmzRouter/get-set-methods-annotation/src/ClassInfo.php
+DocBlock : 
+* @method void setPath(string $path)
+* @method void setFqn(string $fqn)
+* @method void setProperties(PropertyInfo[] $properties)
+* @method void setHasMissingMethods(bool $has_missing_methods)
+* @method bool getHasMissingMethods()
 ```
 
 # License
 
-Copyright 2018 Angel S. Moreno (angelxmoreno). All rights reserved.
+Copyright 2022 Angel S. Moreno (angelxmoreno). All rights reserved.
 
 Licensed under the [MIT](http://www.opensource.org/licenses/mit-license.php) License. Redistributions of the source code included in this repository must retain the copyright notice found in each file.
