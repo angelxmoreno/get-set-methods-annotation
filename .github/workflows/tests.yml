@@ -10,9 +10,15 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
+
+    - name: Install dependencies
+      uses: php-actions/composer@v6
+      with:
+        php_version: "7.4"
+        version: 2.x
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
