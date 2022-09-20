@@ -42,7 +42,6 @@ DocBlock :
 * @method bool getHasMissingMethods()
 ```
 
-
 ## Testing
 tests can be run in two different ways; locally and using a docker container.
 
