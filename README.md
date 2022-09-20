@@ -42,6 +42,64 @@ DocBlock :
 * @method bool getHasMissingMethods()
 ```
 
+
+## Testing
+tests can be run in two different ways; locally and using a docker container.
+
+### Locally
+```shell
+composer tests:check
+composer tests:coverage
+```
+
+### Using the built-in docker image
+```shell
+composer docker:tests:check
+composer docker:tests:coverage
+```
+
+## Current test coverage
+```text
+Coverage Summary
+----------------
+                                                        Lines            %
+
+ \                                                     45 / 71      63.38%
+└── Axm\                                               45 / 71      63.38%
+   └── GetSetAnnotations\                              45 / 71      63.38%
+      ├── Analyser                                      7 /  7     100.00%
+      │  ├── Analyser::buildClassInfosInPath()          6 /  6     100.00%
+      │  └── Analyser::path()                           1 /  1     100.00%
+      ├── CamelCase                                     2 /  3      66.67%
+      │  └── CamelCase::convert()                       2 /  3      66.67%
+      ├── ClassInfo                                    22 / 29      75.86%
+      │  ├── ClassInfo::__construct()                   5 /  5     100.00%
+      │  ├── ClassInfo::buildCurrentDocMethods()        2 /  2     100.00%
+      │  ├── ClassInfo::buildMissingMethodsDoc()        0 /  7       0.00%
+      │  ├── ClassInfo::buildPropertyInfoArray()       11 / 11     100.00%
+      │  ├── ClassInfo::getFqn()                        1 /  1     100.00%
+      │  ├── ClassInfo::getPath()                       1 /  1     100.00%
+      │  ├── ClassInfo::getProperties()                 1 /  1     100.00%
+      │  └── ClassInfo::hasMissingMethods()             1 /  1     100.00%
+      ├── PropertyInfo                                 14 / 14     100.00%
+      │  ├── PropertyInfo::__construct()                8 /  8     100.00%
+      │  ├── PropertyInfo::getGetterFuncName()          1 /  1     100.00%
+      │  ├── PropertyInfo::getName()                    1 /  1     100.00%
+      │  ├── PropertyInfo::getSetterFuncName()          1 /  1     100.00%
+      │  ├── PropertyInfo::getType()                    1 /  1     100.00%
+      │  ├── PropertyInfo::isMissingGetterMethod()      1 /  1     100.00%
+      │  └── PropertyInfo::isMissingSetterMethod()      1 /  1     100.00%
+      └── Writer                                        0 / 18       0.00%
+         ├── Writer::__construct()                      0 /  4       0.00%
+         ├── Writer::outCli()                           0 /  3       0.00%
+         ├── Writer::toCli()                            0 /  6       0.00%
+         └── Writer::writeToFile()                      0 /  5       0.00%
+
+Total: 63.38% (45/71)
+
+Coverage collected in 0.069 seconds
+
+```
 # License
 
 Copyright 2022 Angel S. Moreno (angelxmoreno). All rights reserved.

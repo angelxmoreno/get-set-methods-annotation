@@ -2,4 +2,4 @@
 
 set -e
 
-docker run -t --rm -v $(pwd):/app -w /app angelxmoreno/php-fpm-alpine php ./bin/kahlan $@
+docker run -t --rm -v "$(pwd)":/app -w /app --env PHP_EXTENSION_XDEBUG=1 thecodingmachine/php:7.2-v1-apache php ./vendor/bin/kahlan "$@"

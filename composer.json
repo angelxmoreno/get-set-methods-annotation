@@ -46,6 +46,11 @@
     "tests:check": "kahlan --cc=true --reporter=verbose",
     "tests:coverage": "kahlan --cc=true --reporter=verbose --coverage=4",
     "tests:report": "kahlan --cc=true --reporter=bar --coverage=4 --clover=clover.xml",
-    "tests:clover": "kahlan --no-header --cc=true --reporter=bar --clover=clover.xml"
+    "tests:clover": "kahlan --no-header --cc=true --reporter=bar --clover=clover.xml",
+
+    "docker:tests:check": "./bin/run-tests --cc=true --reporter=verbose",
+    "docker:tests:coverage": "./bin/run-tests --cc=true --reporter=verbose --coverage=4",
+    "docker:tests:report": "./bin/run-tests --cc=true --reporter=bar --coverage=4 --clover=clover.xml",
+    "docker:tests:clover": "./bin/run-tests --no-header --cc=true --reporter=bar --clover=clover.xml"
   }
 }
